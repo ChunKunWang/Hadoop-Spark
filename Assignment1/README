@@ -1,0 +1,20 @@
+Source code:
+    SenderCount.java 
+    SenderCountMapper.java 
+    SenderCountReducer.java
+
+Elapsed time:
+    results are in the file, log_elapsed
+
+Top 100 results:
+    command: sort -nr -k2 results_hd | head -n 100 > results_hd_top100
+    results are in the file, results_hd_top1000
+
+How to verify: 
+    In result/ directory
+    verify.sh compares the results from hadoop, results_hd, to the verified file, log_hd_sorted, which I generate by my own. I use the linux commands, such as sort, awk and diff, to finish the job. It takes 25 minutes to finish all verification work.
+
+    real    25m26.197s
+    user    26m36.154s
+    sys     1m43.667s
+

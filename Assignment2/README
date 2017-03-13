@@ -1,0 +1,54 @@
+Source code:
+   SenRecCount.java
+   SenRecCountMapper.java
+   SenRecCountReducer.java
+   CompositeWritable.java 
+
+Result lists:
+   In result/
+   results_hd: all results
+   results_hd_Sender_top100: top 100 IPs sending most data
+                   1. sort -nr -k2 results_hd | head -n 100 > results_hd_Sender_top100 
+   results_hd_Recv_top100: top 100 IPs receiving most data
+                   1. sort -nr -k3 results_hd | head -n 100 > results_hd_Recv_top100
+   results_intersection: intersection between two lists by using following commands
+                   1. cat results_hd_Sender_top100 | awk -F" " '{print $1}' > file1
+                   2. cat results_hd_Recv_top100 | awk -F" " '{print $1}' > file2
+                   3. grep -f file1 file2 > results_intersection
+
+How to verify:
+    In result/ directory
+    I compare the result, results_hd, to the output from Assignment 1 to check the 
+    total sender amount. By assiging the sender IP the data format as <IP> <1> <0>,
+    I can sum up the total number of sender and receiver IP for verification.
+
+Performance discuss:
+   I test the different reduce task count, such as 4, 8, 10, 16, 20, 32, and 50.
+   For each reduce task count, I run the program three times, see Run_rt.sh, 
+   and pick up the median one. The experiment details are in the result directory,
+   see log_rt_4, log_rt_8, log_rt_10, ... etc. The result is as follows.
+ 
+   <# of reduce task> <Execution time>
+          [ 4]              05:55
+          [ 8]              04:34 
+          [10]              03:23
+          [16]              03:26
+          [20]              03:00
+          [32]              02:57
+          [40]              23:53
+
+   Observation:
+     1. The execution time is speedup when we increae the number of reduce tasks.
+        We can see the trend from 4 reduce tasks to 32 reduce tasks. However, it
+        doesn't speed up linearly. The reason may be due to I/O bound instead of
+        CPU computation.
+
+     2. When the hadoop reaching from <map 99% reduce 33%> to <map 100% reduce 33%>,
+        it used to slow down a bit and takes more time to finish. I think it is because
+        in that moment hadoop manages initialize all reducers.
+
+     3. When the number of reduce tasks is 40, the execution time is surprisingly slow
+        down to 20 minutes. It may be due to reducers are scheduled, the rest of reducers
+        that are not scheduled remains pending and runs all alone.
+
+

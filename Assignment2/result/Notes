@@ -1,0 +1,7 @@
+cat results_hd_Sender_top100 | awk -F" " '{print $1}' > file1
+
+cat results_hd_Recv_top100 | awk -F" " '{print $1}' > file2
+
+grep -f file1 file2 > results_intersection
+
+

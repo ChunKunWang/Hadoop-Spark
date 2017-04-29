@@ -1,0 +1,19 @@
+Source code:
+  JavaRecvCount.java
+
+All output file:
+  recvcounts (unsorted)
+
+Top 100 results:
+  top_100_recv
+  `sort -r -n -k2 recvcounts | head -n 100 > top_100_recv`
+
+Elapsed time:
+  ID: app-20170225224936-0088 
+  Submitted Time: 2017/02/25 22:49:36
+  Duration: 49 s
+
+How to verify:
+  In data/ directory
+  verify.sh generates log_verify_sorted. It takes 30 minutes to finish all verification work.
+

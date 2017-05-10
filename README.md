@@ -1,4 +1,5 @@
 # hadoop_practice
-This is my personal space for practicing Hadoop
+Practice Hadoop and Spark in Java.
 
 Amos
+

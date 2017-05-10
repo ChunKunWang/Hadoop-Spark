@@ -1,0 +1,111 @@
+/*****************/
+/*    Usage      */
+/*****************/
+The program will prepare sending and receiving data in the beginning and store
+initiative results in JavaPairRDD. The following commands serve the sorting
+and query work with setting up boundary. This program also provides linux command
+execution, by using "Runtime.getRuntime().exec()" for convenience.
+
+[ADUQuery]$ help
+Command: send, recv, tar, tar-ext, help, quit
+usage: send/recv
+ -gt,--GreaterThan <arg>   Setup Min Threshold
+ -lt,--LessThan <arg>      Setup Max Threshold
+ -o,--Outfile <arg>        Setup Output File Name; default: QueryResult
+ -sh,--Show <arg>          Show Top # Results
+ -top,--Top <arg>          Setup Top
+
+1. send: working on all IP addresses and number of bytes sent
+2. recv: working on all IP addresses and number of bytes received
+3. tar: given an IP address, return the number of bytes sent and received by that address
+4. tar-ext: same as `tar` but extend more details
+5. help: show command usages
+6. quit: leave the program 
+
+/* Look at sender that the number of bytes is greater than 10000000 and show 10 results */
+[ADUQuery]$ send -sh 10 -gt 10000000
+Look at sender
+121.152.142.130: 133566045780
+121.152.149.143: 68592089666
+121.152.149.166: 65286522074
+121.152.153.106: 34107974734
+121.152.250.178: 31362858707
+121.152.250.151: 30514727716
+121.152.250.227: 19966955038
+121.152.18.240: 17850994765
+121.56.79.49: 15728952686
+121.152.250.99: 12514642719
+Query output file: QueryResult
+
+/* Look at receiver that 2000 <= the number of bytes <= 4000 and show 10 results */
+[ADUQuery]$ recv -sh 10 -gt 2000 -lt 4000
+Look at receiver
+222.162.53.134: 4000
+195.104.66.178: 4000
+53.55.102.6: 4000
+189.157.105.164: 4000
+237.103.210.29: 4000
+182.91.80.127: 4000
+9.164.161.201: 4000
+219.206.207.161: 4000
+39.26.91.184: 4000
+191.148.236.11: 4000
+Query output file: QueryResult
+
+/* find top 50 results from sender and generate result to "top50_sender" */
+[ADUQuery]$ send -top 50 -o top50_sender
+Look at sender
+Query output file: top50_sender
+[ADUQuery]$ head top50_sender
+121.152.142.130: 133566045780
+121.152.149.143: 68592089666
+121.152.149.166: 65286522074
+121.152.153.106: 34107974734
+121.152.250.178: 31362858707
+121.152.250.151: 30514727716
+121.152.250.227: 19966955038
+121.152.18.240: 17850994765
+121.56.79.49: 15728952686
+121.152.250.99: 12514642719
+
+/* target on certain IP and show the number of bytes sent and received */
+[ADUQuery]$ tar 207.94.129.219
+Target the IP: 207.94.129.219
+Total bytes sent: [1000]
+Total bytes recv: [443]
+
+/********************/
+/*  New query type  */
+/********************/
+tar-get: not only shows the number of bytes sent and received
+         but indicates all instances for each ADU  
+
+[ADUQuery]$ tar-ext 207.94.129.219
+Target the IP: 207.94.129.219
+Total bytes sent: [1000]
+   |-> 20
+   |-> 39
+   |-> 32
+   |-> 6
+   |-> 892
+   |-> 5
+   |-> 6
+Total bytes recv: [443]
+   |-> 60
+   |-> 127
+   |-> 52
+   |-> 50
+   |-> 50
+   |-> 56
+   |-> 48
+
+/***********/
+/*  Notes  */
+/***********/
+In this program, I also implement the IP host count for sending and receiving.
+However, the system has insufficient temp store for having so much workload if
+the program prepares IP host count and IP bytes count at the same time. So, I
+decide to disable the functions in the program for the host counting part.
+
+IP host count function: "static JavaRDD<String> ReadIPCount"
+

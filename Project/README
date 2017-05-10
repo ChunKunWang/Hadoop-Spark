@@ -1,0 +1,20 @@
+Source code:
+  RedditComment.java
+  wordcount/WordCount.java
+
+All output results:
+  result/
+
+Experiment running script:
+  result/run.sh
+  result/RunAll.sh
+
+Download Reddit Comment:
+  tmp/GetData.sh
+
+Wiki page content:
+  wordcount/wikipages
+
+Wordcount result of Wiki page:
+  wordcount/wordcounts
+
